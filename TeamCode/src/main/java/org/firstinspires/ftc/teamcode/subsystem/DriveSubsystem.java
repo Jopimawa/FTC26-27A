@@ -36,6 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_backRight = new Motor(hardwareMap,"backRight Drive");
         setupMotor(m_backRight,backRightRev);
+
         MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
                 ,m_backLeft,m_backRight);
 
@@ -48,7 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
         motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
     public void drive(double x, double y, double rx) {
-        driveAuto(x,y,rx);
+        driveManual(x,y,rx);
     }
     public void driveAuto(double x, double y, double rx, boolean isField) {
         mecanum.driveRobotCentric(y,x,rx);
@@ -66,18 +67,47 @@ public class DriveSubsystem extends SubsystemBase {
 
        double frontLeft  = power * cos/max + rx;
        double frontRight = power * sin/max - rx;
-       double rearLeft   = power * sin/max + rx;
-       double rearRight  = power * cos/max - rx;
+       double backLeft   = power * sin/max + rx;
+       double backRight  = power * cos/max - rx;
 
        if ((power + Math.abs(rx)) > 1) {
            frontLeft  /= power + Math.abs(rx);
            frontRight /= power + Math.abs(rx);
-           rearLeft   /= power + Math.abs(rx);
-           rearRight  /= power + Math.abs(rx);
+           backLeft   /= power + Math.abs(rx);
+           backRight  /= power + Math.abs(rx);
        }
 
-       //TODO: Motor power
 
+        m_frontLeft.set(frontLeft);
+        m_frontRight.set(frontRight);
+        m_backLeft.set(backLeft);
+        m_backRight.set(backRight);
+    }
+
+    public void driveLegacy(double y, double x, double rx) {
+        // Drive used in 2025-2026 season, clobbered by aaron jimenez but wasnt replaced the whole season
+        x =-x;
+        y =-y;
+
+        double fl = y + x - rx;
+        double fr = y - x + rx;
+        double bl = y - x - rx;
+        double br = y + x + rx;
+
+
+        // Normalize so no value exceeds 1
+        double max = Math.max(1.0, Math.max(Math.abs(fl),
+                Math.max(Math.abs(bl), Math.max(Math.abs(fr), Math.abs(br)))));
+
+        fl /= max;
+        bl /= max;
+        fr /= max;
+        br /= max;
+
+        m_frontLeft.set(fl);
+        m_backLeft.set(bl);
+        m_frontRight.set(fr);
+        m_backRight.set(br);
     }
     public void stop() {
        mecanum.stop();
