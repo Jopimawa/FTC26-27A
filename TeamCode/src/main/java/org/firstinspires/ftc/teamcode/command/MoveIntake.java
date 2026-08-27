@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.command;
 
 
 import com.seattlesolvers.solverslib.command.CommandBase;
-
 import org.firstinspires.ftc.teamcode.subsystem.GameSubsystem;
 
 public class MoveIntake extends CommandBase {

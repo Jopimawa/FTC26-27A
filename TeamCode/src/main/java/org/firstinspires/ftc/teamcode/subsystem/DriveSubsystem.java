@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
@@ -17,25 +16,20 @@ public class DriveSubsystem extends SubsystemBase {
     public static boolean backLeftRev = true;
     Motor m_backRight;
     public static boolean backRightRev = false;
-    public static double driveKp = 0;
-    public static double driveKi = 0;
-    public static double driveKd = 0;
-    public static double driveKs = 0;
-    public static double driveKv = 0;
     MecanumDrive mecanum;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
 
-        //m_frontLeft = new Motor(hardwareMap,"frontLeft");
+        m_frontLeft = new Motor(hardwareMap,"frontLeft");
         setupMotor(m_frontLeft,frontLeftRev);
 
-        //m_frontRight = new Motor(hardwareMap,"frontRight");
+        m_frontRight = new Motor(hardwareMap,"frontRight");
         setupMotor(m_frontRight,frontRightRev);
 
-        //m_backLeft = new Motor(hardwareMap,"backLeft");
+        m_backLeft = new Motor(hardwareMap,"backLeft");
         setupMotor(m_backLeft,backLeftRev);
 
-        //m_backRight = new Motor(hardwareMap,"backRight");
+        m_backRight = new Motor(hardwareMap,"backRight");
         setupMotor(m_backRight,backRightRev);
 
         MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
@@ -44,13 +38,11 @@ public class DriveSubsystem extends SubsystemBase {
     }
     public void setupMotor(Motor motor, boolean rev) {
         motor.setRunMode(Motor.RunMode.VelocityControl);
-        motor.setVeloCoefficients(driveKp, driveKi, driveKd);
-        motor.setFeedforwardCoefficients(driveKs, driveKv);
         motor.setInverted(rev);
         motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
     public void drive(double x, double y, double rx) {
-        driveManual(x,y,rx);
+        driveLegacy(x,y,rx);
     }
     public void driveAuto(double x, double y, double rx, boolean isField) {
         mecanum.driveRobotCentric(y,x,rx);
@@ -85,7 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight.set(backRight);
     }
 
-    public void driveLegacy(double y, double x, double rx) {
+    public void driveLegacy(double x, double y, double rx) {
         // Drive used in 2025-2026 season, clobbered by aaron jimenez but wasnt replaced the whole season
         x =-x;
         y =-y;
