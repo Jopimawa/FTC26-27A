@@ -5,18 +5,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 public class GameSubsystem extends SubsystemBase {
-    private final DcMotorEx intake;
+    private final Motor intake;
     public GameSubsystem(HardwareMap hardwareMap) {
-        intake = (DcMotorEx) hardwareMap.get(DcMotor.class, "intake");
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake = new Motor(hardwareMap, "intake");
     }
     public void setIntake(double power) {
-        intake.setPower(power);
+        intake.set(power);
     }
     public void stopIntake() {
-        intake.setPower(0);
+        intake.stopMotor();
     }
 
 }

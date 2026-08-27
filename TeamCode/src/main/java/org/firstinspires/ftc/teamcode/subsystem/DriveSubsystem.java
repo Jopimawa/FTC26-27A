@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
@@ -9,11 +10,11 @@ import com.seattlesolvers.solverslib.hardware.motors.Motor;
 @Configurable
 public class DriveSubsystem extends SubsystemBase {
     Motor m_frontLeft;
-    public static boolean frontLeftRev = false;
+    public static boolean frontLeftRev = true;
     Motor m_frontRight;
     public static boolean frontRightRev = false;
     Motor m_backLeft;
-    public static boolean backLeftRev = false;
+    public static boolean backLeftRev = true;
     Motor m_backRight;
     public static boolean backRightRev = false;
     public static double driveKp = 0;
@@ -25,16 +26,16 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DriveSubsystem(HardwareMap hardwareMap) {
 
-        m_frontLeft = new Motor(hardwareMap,"frontLeft Drive");
+        //m_frontLeft = new Motor(hardwareMap,"frontLeft");
         setupMotor(m_frontLeft,frontLeftRev);
 
-        m_frontRight = new Motor(hardwareMap,"frontRight Drive");
+        //m_frontRight = new Motor(hardwareMap,"frontRight");
         setupMotor(m_frontRight,frontRightRev);
 
-        m_backLeft = new Motor(hardwareMap,"backLeft Drive");
+        //m_backLeft = new Motor(hardwareMap,"backLeft");
         setupMotor(m_backLeft,backLeftRev);
 
-        m_backRight = new Motor(hardwareMap,"backRight Drive");
+        //m_backRight = new Motor(hardwareMap,"backRight");
         setupMotor(m_backRight,backRightRev);
 
         MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
