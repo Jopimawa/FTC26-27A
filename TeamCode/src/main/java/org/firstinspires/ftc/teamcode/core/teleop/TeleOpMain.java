@@ -12,10 +12,6 @@ public class TeleOpMain extends CommandOpMode {
     @Override
     public void initialize() {
         robotContainer = new RobotContainer(hardwareMap, telemetry, gamepad1, gamepad2);
-
-    }
-    @Override
-    public void periodic() {
         telemetry.addLine("THIS IS THE VERSION");
         telemetry.update();
     }

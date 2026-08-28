@@ -16,7 +16,7 @@ public class DriveSubsystem extends SubsystemBase {
     public static boolean backLeftRev = true;
     Motor m_backRight;
     public static boolean backRightRev = false;
-    MecanumDrive mecanum;
+    //MecanumDrive mecanum;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
 
@@ -32,8 +32,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight = new Motor(hardwareMap,"backRight");
         setupMotor(m_backRight,backRightRev);
 
-        MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
-                ,m_backLeft,m_backRight);
+        //MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
+        //        ,m_backLeft,m_backRight);
 
     }
     public void setupMotor(Motor motor, boolean rev) {
@@ -44,12 +44,12 @@ public class DriveSubsystem extends SubsystemBase {
     public void drive(double x, double y, double rx) {
         driveLegacy(x,y,rx);
     }
-    public void driveAuto(double x, double y, double rx, boolean isField) {
-        mecanum.driveRobotCentric(y,x,rx);
-    }
-    public void driveAuto(double x, double y, double rx) {
-        driveAuto(x,y,rx,false);
-    }
+    //public void driveAuto(double x, double y, double rx, boolean isField) {
+      //  mecanum.driveRobotCentric(y,x,rx);
+    //}
+    //public void driveAuto(double x, double y, double rx) {
+    //    driveAuto(x,y,rx,false);
+    //}
     public void driveManual(double x, double y, double rx) {
        double theta = Math.atan2(y,x);
        double power = Math.hypot(y,x);
@@ -103,6 +103,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight.set(br);
     }
     public void stop() {
-       mecanum.stop();
+        m_frontLeft.set(0);
+        m_backLeft.set(0);
+        m_frontRight.set(0);
+        m_backRight.set(0);
     }
 }

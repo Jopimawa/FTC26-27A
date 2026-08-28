@@ -27,7 +27,10 @@ public class RobotContainer {
     }
     public void configureBindings() {
         drive.setDefaultCommand(new MoveWheel(drive, controller1::getLeftX, controller1::getLeftY, controller1::getRightX));
-
+        controller1.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenHeld(new MoveWheel(drive, 0, -1, 0));
+        controller1.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenHeld(new MoveWheel(drive, 0, 1, 0));
+        controller1.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenHeld(new MoveWheel(drive, 1, 0, 0));
+        controller1.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenHeld(new MoveWheel(drive, -1, 0, 0));
         controller1.getGamepadButton(GamepadKeys.Button.A).whenHeld(new MoveIntake(game,1));
     }
 }
