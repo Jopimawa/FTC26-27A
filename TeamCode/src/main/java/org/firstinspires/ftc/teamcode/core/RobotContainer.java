@@ -18,14 +18,14 @@ public class RobotContainer {
     private final GamepadEx controller2;
     private Telemetry telemetry;
     public RobotContainer(HardwareMap hardwareMap, Telemetry telemetry, Gamepad controller1, Gamepad controller2) {
-        //drive = new DriveSubsystem(hardwareMap);
+        drive = new DriveSubsystem(hardwareMap);
         game = new GameSubsystem(hardwareMap);
         this.controller1 = new GamepadEx(controller1);
         this.controller2 = new GamepadEx(controller2);
         configureBindings();
     }
     public void configureBindings() {
-        //drive.setDefaultCommand(new MoveWheel(drive, controller1::getLeftX, controller1::getLeftY, controller1::getRightX));
+        drive.setDefaultCommand(new MoveWheel(drive, controller1::getLeftX, controller1::getLeftY, controller1::getRightX));
 
         controller1.getGamepadButton(GamepadKeys.Button.A).whenHeld(new MoveIntake(game,1));
     }

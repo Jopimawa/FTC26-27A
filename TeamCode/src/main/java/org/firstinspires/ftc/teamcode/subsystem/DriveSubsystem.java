@@ -22,24 +22,21 @@ public class DriveSubsystem extends SubsystemBase {
     public static double driveKd = 0;
     public static double driveKs = 0;
     public static double driveKv = 0;
-    MecanumDrive mecanum;
+    Mecan++-umDrive mecanum;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
 
-        //m_frontLeft = new Motor(hardwareMap,"frontLeft");
+        m_frontLeft = new Motor(hardwareMap,"frontLeft");
         setupMotor(m_frontLeft,frontLeftRev);
 
-        //m_frontRight = new Motor(hardwareMap,"frontRight");
+        m_frontRight = new Motor(hardwareMap,"frontRight");
         setupMotor(m_frontRight,frontRightRev);
 
-        //m_backLeft = new Motor(hardwareMap,"backLeft");
+        m_backLeft = new Motor(hardwareMap,"backLeft");
         setupMotor(m_backLeft,backLeftRev);
 
-        //m_backRight = new Motor(hardwareMap,"backRight");
+        m_backRight = new Motor(hardwareMap,"backRight");
         setupMotor(m_backRight,backRightRev);
-
-        MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
-                ,m_backLeft,m_backRight);
 
     }
     public void setupMotor(Motor motor, boolean rev) {
@@ -52,12 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void drive(double x, double y, double rx) {
         driveManual(x,y,rx);
     }
-    public void driveAuto(double x, double y, double rx, boolean isField) {
-        mecanum.driveRobotCentric(y,x,rx);
-    }
-    public void driveAuto(double x, double y, double rx) {
-        driveAuto(x,y,rx,false);
-    }
+
     public void driveManual(double x, double y, double rx) {
        double theta = Math.atan2(y,x);
        double power = Math.hypot(y,x);
@@ -111,6 +103,9 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight.set(br);
     }
     public void stop() {
-       mecanum.stop();
+        m_frontLeft.stopMotor();
+        m_backLeft.stopMotor();
+        m_frontRight.stopMotor();
+        m_backRight.stopMotor();
     }
 }
