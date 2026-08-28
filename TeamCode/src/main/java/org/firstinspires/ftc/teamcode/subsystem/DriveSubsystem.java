@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
@@ -8,47 +11,40 @@ import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 @Configurable
 public class DriveSubsystem extends SubsystemBase {
-    Motor m_frontLeft;
+    //Strips the Motor object
+    DcMotorEx m_frontLeft;
     public static boolean frontLeftRev = true;
-    Motor m_frontRight;
+    DcMotorEx m_frontRight;
     public static boolean frontRightRev = false;
-    Motor m_backLeft;
+    DcMotorEx m_backLeft;
     public static boolean backLeftRev = true;
-    Motor m_backRight;
+    DcMotorEx m_backRight;
     public static boolean backRightRev = false;
     MecanumDrive mecanum;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
-
-        m_frontLeft = new Motor(hardwareMap,"frontLeft");
+        m_frontLeft = (DcMotorEx) hardwareMap.get(DcMotor.class, "frontRight");
         setupMotor(m_frontLeft,frontLeftRev);
 
-        m_frontRight = new Motor(hardwareMap,"frontRight");
+        m_frontRight = (DcMotorEx) hardwareMap.get(DcMotor.class, "backLeft");
         setupMotor(m_frontRight,frontRightRev);
 
-        m_backLeft = new Motor(hardwareMap,"backLeft");
+        m_backLeft = (DcMotorEx) hardwareMap.get(DcMotor.class, "frontLeft");
         setupMotor(m_backLeft,backLeftRev);
 
-        m_backRight = new Motor(hardwareMap,"backRight");
+        m_backRight = (DcMotorEx) hardwareMap.get(DcMotor.class, "backRight");
         setupMotor(m_backRight,backRightRev);
 
-        MecanumDrive mecanum = new MecanumDrive(m_frontLeft,m_frontRight
-                ,m_backLeft,m_backRight);
-
     }
-    public void setupMotor(Motor motor, boolean rev) {
-        motor.setRunMode(Motor.RunMode.VelocityControl);
-        motor.setInverted(rev);
-        motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+    public void setupMotor(DcMotorEx motor, boolean rev) {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        DcMotorSimple.Direction invert = (rev) ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE;
+        motor.setDirection(invert);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public void drive(double x, double y, double rx) {
         driveLegacy(x,y,rx);
-    }
-    public void driveAuto(double x, double y, double rx, boolean isField) {
-        mecanum.driveRobotCentric(y,x,rx);
-    }
-    public void driveAuto(double x, double y, double rx) {
-        driveAuto(x,y,rx,false);
     }
     public void driveManual(double x, double y, double rx) {
        double theta = Math.atan2(y,x);
@@ -70,11 +66,10 @@ public class DriveSubsystem extends SubsystemBase {
            backRight  /= power + Math.abs(rx);
        }
 
-
-        m_frontLeft.set(frontLeft);
-        m_frontRight.set(frontRight);
-        m_backLeft.set(backLeft);
-        m_backRight.set(backRight);
+        m_frontLeft.setPower(frontLeft);
+        m_frontRight.setPower(frontRight);
+        m_backLeft.setPower(backLeft);
+        m_backRight.setPower(backRight);
     }
 
     public void driveLegacy(double x, double y, double rx) {
@@ -87,7 +82,6 @@ public class DriveSubsystem extends SubsystemBase {
         double bl = y - x - rx;
         double br = y + x + rx;
 
-
         // Normalize so no value exceeds 1
         double max = Math.max(1.0, Math.max(Math.abs(fl),
                 Math.max(Math.abs(bl), Math.max(Math.abs(fr), Math.abs(br)))));
@@ -97,10 +91,10 @@ public class DriveSubsystem extends SubsystemBase {
         fr /= max;
         br /= max;
 
-        m_frontLeft.set(fl);
-        m_backLeft.set(bl);
-        m_frontRight.set(fr);
-        m_backRight.set(br);
+        m_frontLeft.setPower(fl);
+        m_frontRight.setPower(fr);
+        m_backLeft.setPower(bl);
+        m_backRight.setPower(br);
     }
     public void stop() {
        mecanum.stop();
