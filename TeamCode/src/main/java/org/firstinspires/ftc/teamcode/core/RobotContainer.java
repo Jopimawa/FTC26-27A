@@ -22,6 +22,7 @@ public class RobotContainer {
         game = new GameSubsystem(hardwareMap);
         this.controller1 = new GamepadEx(controller1);
         this.controller2 = new GamepadEx(controller2);
+        this.telemetry = telemetry;
         configureBindings();
     }
     public void configureBindings() {

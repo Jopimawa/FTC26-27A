@@ -37,7 +37,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     }
     public void setupMotor(Motor motor, boolean rev) {
-        motor.setRunMode(Motor.RunMode.VelocityControl);
+        motor.setRunMode(Motor.RunMode.RawPower);
         motor.setInverted(rev);
         motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
     }
