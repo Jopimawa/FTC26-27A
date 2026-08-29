@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 @Configurable
@@ -22,7 +22,6 @@ public class DriveSubsystem extends SubsystemBase {
     public static double driveKd = 0;
     public static double driveKs = 0;
     public static double driveKv = 0;
-    Mecan++-umDrive mecanum;
 
     public DriveSubsystem(HardwareMap hardwareMap) {
 
@@ -41,13 +40,25 @@ public class DriveSubsystem extends SubsystemBase {
     }
     public void setupMotor(Motor motor, boolean rev) {
         motor.setRunMode(Motor.RunMode.VelocityControl);
-        motor.setVeloCoefficients(driveKp, driveKi, driveKd);
-        motor.setFeedforwardCoefficients(driveKs, driveKv);
         motor.setInverted(rev);
         motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        setupK(motor);
+    }
+    public void setupK(Motor motor) {
+        motor.setVeloCoefficients(driveKp, driveKi, driveKd);
+        motor.setFeedforwardCoefficients(driveKs, driveKv);
+    }
+    public void updateK() {
+        setupK(m_frontLeft);
+        setupK(m_frontRight);
+        setupK(m_backLeft);
+        setupK(m_backRight);
     }
     public void drive(double x, double y, double rx) {
         driveManual(x,y,rx);
+        telemetry.addData("X  ",x);
+        telemetry.addData("Y  ",y);
+        telemetry.addData("RX ",rx);
     }
 
     public void driveManual(double x, double y, double rx) {
@@ -107,5 +118,19 @@ public class DriveSubsystem extends SubsystemBase {
         m_backLeft.stopMotor();
         m_frontRight.stopMotor();
         m_backRight.stopMotor();
+    }
+
+    @Override
+    public void periodic() {
+        telemetry.addData("fl ",m_frontLeft.get());
+        telemetry.addData("fr ",m_frontRight.get());
+        telemetry.addData("bl ",m_backLeft.get());
+        telemetry.addData("br ",m_backRight.get());
+        telemetry.addData("Kp ",m_frontLeft.getVeloCoefficients()[0]);
+        telemetry.addData("Ki ",m_frontLeft.getVeloCoefficients()[1]);
+        telemetry.addData("Kd ",m_frontLeft.getVeloCoefficients()[2]);
+        telemetry.addData("Ks ",m_frontLeft.getFeedforwardCoefficients()[0]);
+        telemetry.addData("Kv ",m_frontLeft.getFeedforwardCoefficients()[1]);
+        telemetry.update();
     }
 }

@@ -23,6 +23,11 @@ public class MoveWheel extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        drive.updateK();
+    }
+
+    @Override
     public void execute() {
         drive.drive(x.getAsDouble(), y.getAsDouble(), rx.getAsDouble());
     }
