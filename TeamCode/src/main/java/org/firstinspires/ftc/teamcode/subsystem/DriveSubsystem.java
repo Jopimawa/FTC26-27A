@@ -81,11 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
            backRight  /= power + Math.abs(rx);
        }
 
-
-        m_frontLeft.set(frontLeft);
-        m_frontRight.set(frontRight);
-        m_backLeft.set(backLeft);
-        m_backRight.set(backRight);
+       driveRaw(frontLeft,frontRight,backLeft,backRight);
     }
 
     public void driveLegacy(double y, double x, double rx) {
@@ -108,16 +104,21 @@ public class DriveSubsystem extends SubsystemBase {
         fr /= max;
         br /= max;
 
+        driveRaw(fl,fr,bl,br);
+    }
+    public void driveRaw(double fl, double fr, double bl, double br) {
         m_frontLeft.set(fl);
-        m_backLeft.set(bl);
         m_frontRight.set(fr);
+        m_backLeft.set(bl);
         m_backRight.set(br);
+        telemetry.addLine("MOVING");
     }
     public void stop() {
         m_frontLeft.stopMotor();
         m_backLeft.stopMotor();
         m_frontRight.stopMotor();
         m_backRight.stopMotor();
+        telemetry.addLine("STOPPED");
     }
 
     @Override
