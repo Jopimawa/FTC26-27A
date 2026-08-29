@@ -42,17 +42,17 @@ public class DriveSubsystem extends SubsystemBase {
         motor.setRunMode(Motor.RunMode.VelocityControl);
         motor.setInverted(rev);
         motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        setupK(motor);
+        updateK(motor);
     }
-    public void setupK(Motor motor) {
+    public void updateK(Motor motor) {
         motor.setVeloCoefficients(driveKp, driveKi, driveKd);
         motor.setFeedforwardCoefficients(driveKs, driveKv);
     }
     public void updateK() {
-        setupK(m_frontLeft);
-        setupK(m_frontRight);
-        setupK(m_backLeft);
-        setupK(m_backRight);
+        updateK(m_frontLeft);
+        updateK(m_frontRight);
+        updateK(m_backLeft);
+        updateK(m_backRight);
     }
     public void drive(double x, double y, double rx) {
         driveManual(x,y,rx);
