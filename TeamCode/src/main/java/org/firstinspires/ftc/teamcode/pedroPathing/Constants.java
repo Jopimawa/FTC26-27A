@@ -13,13 +13,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(6) // in kilos
-            //.headingPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
+            .mass(6.71)
+            // .headingPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
             //.forwardZeroPowerAcceleration(0)
             //.lateralZeroPowerAcceleration(0)
             //.translationalPIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
             //.drivePIDFCoefficients(new PIDFCoefficients(0, 0, 0, 0))
-            //.centripetalScaling(0.005)
+            //.centripetalScaling(0)
             ;
 
     // TODO: TESTING Constants
@@ -27,24 +27,24 @@ public class Constants {
             .maxPower(1)
             .leftFrontMotorName("frontLeft")
             .rightFrontMotorName("frontRight")
-            .leftRearMotorName("backLeft")
             .rightRearMotorName("backRight")
+            .leftRearMotorName("backLeft")
             .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            //.xVelocity(0)
-            //.yVelocity(0)
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .xVelocity(0)
+            .yVelocity(0)
             ;
 
     public static TwoWheelConstants localizerConstants = new TwoWheelConstants()
-            .forwardEncoder_HardwareMapName("Forward Odom")
-            .strafeEncoder_HardwareMapName("Strafe Odom")
+            .forwardEncoder_HardwareMapName("odomForward")
+            .strafeEncoder_HardwareMapName("odomStrafe")
             .IMU_HardwareMapName("imu")
             .IMU_Orientation(
                     new RevHubOrientationOnRobot(
                             RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                            RevHubOrientationOnRobot.UsbFacingDirection.LEFT
+                            RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
                     )
             )
             .forwardTicksToInches(1)

@@ -1,29 +1,33 @@
 package org.firstinspires.ftc.teamcode.subsystem;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
+import com.bylazar.telemetry.PanelsTelemetry;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Configurable
 public class DriveSubsystem extends SubsystemBase {
     Motor m_frontLeft;
-    public static boolean frontLeftRev = true;
+    public static boolean frontLeftRev = false;
     Motor m_frontRight;
-    public static boolean frontRightRev = false;
+    public static boolean frontRightRev = true;
     Motor m_backLeft;
-    public static boolean backLeftRev = true;
+    public static boolean backLeftRev = false;
     Motor m_backRight;
-    public static boolean backRightRev = false;
-    public static double driveKp = 0;
+    public static boolean backRightRev = true;
+    public static double driveKp = 0.5;
     public static double driveKi = 0;
-    public static double driveKd = 0;
-    public static double driveKs = 0;
-    public static double driveKv = 0;
-
-    public DriveSubsystem(HardwareMap hardwareMap) {
+    public static double driveKd = 0.022;
+    public static double driveKs = 0.02;
+    public static double driveKv = 1.2;
+    private static boolean setup = false;
+    private static Telemetry telemetry;
+    public DriveSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
 
         m_frontLeft = new Motor(hardwareMap,"frontLeft");
         setupMotor(m_frontLeft,frontLeftRev);
@@ -37,12 +41,27 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight = new Motor(hardwareMap,"backRight");
         setupMotor(m_backRight,backRightRev);
 
+        DriveSubsystem.telemetry = telemetry;
     }
     public void setupMotor(Motor motor, boolean rev) {
-        motor.setRunMode(Motor.RunMode.VelocityControl);
         motor.setInverted(rev);
         motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         updateK(motor);
+    }
+    public void updateV(boolean vel) {
+        if (vel) {
+            m_frontLeft.setRunMode(Motor.RunMode.VelocityControl);
+            m_frontRight.setRunMode(Motor.RunMode.VelocityControl);
+            m_backLeft.setRunMode(Motor.RunMode.VelocityControl);
+            m_backRight.setRunMode(Motor.RunMode.VelocityControl);
+            telemetry.addData("drive type: ","encoder");
+        } else {
+            m_frontLeft.setRunMode(Motor.RunMode.RawPower);
+            m_frontRight.setRunMode(Motor.RunMode.RawPower);
+            m_backLeft.setRunMode(Motor.RunMode.RawPower);
+            m_backRight.setRunMode(Motor.RunMode.RawPower);
+            telemetry.addData("drive type: ","raw (last years)");
+        }
     }
     public void updateK(Motor motor) {
         motor.setVeloCoefficients(driveKp, driveKi, driveKd);
@@ -56,9 +75,10 @@ public class DriveSubsystem extends SubsystemBase {
     }
     public void drive(double x, double y, double rx) {
         driveManual(x,y,rx);
-        telemetry.addData("X  ",x);
-        telemetry.addData("Y  ",y);
-        telemetry.addData("RX ",rx);
+        setup = true;
+        telemetry.addData("x  ",x);
+        telemetry.addData("y  ",y);
+        telemetry.addData("rx ",rx);
     }
 
     public void driveManual(double x, double y, double rx) {
@@ -84,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase {
        driveRaw(frontLeft,frontRight,backLeft,backRight);
     }
 
-    public void driveLegacy(double y, double x, double rx) {
+    public void driveLegacy(double x, double y, double rx) {
         // Drive used in 2025-2026 season, clobbered by aaron jimenez but wasnt replaced the whole season
         x =-x;
         y =-y;
@@ -111,27 +131,28 @@ public class DriveSubsystem extends SubsystemBase {
         m_frontRight.set(fr);
         m_backLeft.set(bl);
         m_backRight.set(br);
-        telemetry.addLine("MOVING");
+        telemetry.addData("fl ",fl);
+        telemetry.addData("fr ",fr);
+        telemetry.addData("bl ",bl);
+        telemetry.addData("br ",br);
+
     }
     public void stop() {
         m_frontLeft.stopMotor();
         m_backLeft.stopMotor();
         m_frontRight.stopMotor();
         m_backRight.stopMotor();
-        telemetry.addLine("STOPPED");
     }
 
     @Override
     public void periodic() {
-        telemetry.addData("fl ",m_frontLeft.get());
-        telemetry.addData("fr ",m_frontRight.get());
-        telemetry.addData("bl ",m_backLeft.get());
-        telemetry.addData("br ",m_backRight.get());
-        telemetry.addData("Kp ",m_frontLeft.getVeloCoefficients()[0]);
-        telemetry.addData("Ki ",m_frontLeft.getVeloCoefficients()[1]);
-        telemetry.addData("Kd ",m_frontLeft.getVeloCoefficients()[2]);
-        telemetry.addData("Ks ",m_frontLeft.getFeedforwardCoefficients()[0]);
-        telemetry.addData("Kv ",m_frontLeft.getFeedforwardCoefficients()[1]);
-        telemetry.update();
+        if (setup) {
+            telemetry.addData("fl ", m_frontLeft.get());
+            telemetry.addData("fr ", m_frontRight.get());
+            telemetry.addData("bl ", m_backLeft.get());
+            telemetry.addData("br ", m_backRight.get());
+            telemetry.update();
+        }
     }
+
 }
