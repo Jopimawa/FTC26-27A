@@ -35,7 +35,7 @@ public class RobotContainer {
                 .whenHeld(new ToggleMoveEncoder(drive, false));
 
         gamepad[0].getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                  .whenHeld(new MoveWheelRaw(drive,1,1,1,1));
+                  .whenHeld(new MoveWheelRaw(drive,0.05,0.05,0.05,0.05));
         gamepad[0].getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                   .whenHeld(new MoveWheelRaw(drive,0,0.5,0,0));
         gamepad[0].getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)

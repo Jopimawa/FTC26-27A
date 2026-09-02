@@ -41,6 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_backRight = new Motor(hardwareMap,"backRight");
         setupMotor(m_backRight,backRightRev);
 
+        updateV(true);
         DriveSubsystem.telemetry = telemetry;
     }
     public void setupMotor(Motor motor, boolean rev) {
@@ -147,10 +148,22 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (setup) {
-            telemetry.addData("fl ", m_frontLeft.get());
-            telemetry.addData("fr ", m_frontRight.get());
-            telemetry.addData("bl ", m_backLeft.get());
-            telemetry.addData("br ", m_backRight.get());
+            double flr = m_frontLeft.getRate();
+            double frr = m_frontRight.getRate();
+            double brr = m_backLeft.getRate();
+            double blr = m_backRight.getRate();
+            telemetry.addData("fl ", flr);
+            telemetry.addData("fr ", frr);
+            telemetry.addData("bl ", brr);
+            telemetry.addData("br ", blr);
+            double avg = (flr+frr+brr+blr)/4;
+            double max = Math.max(flr, Math.max(frr, Math.max(brr, blr)));
+            double min = Math.min(flr, Math.min(frr, Math.min(brr, blr)));
+            double avgdiff = max-avg;
+            double maxdiff = max-min;
+            telemetry.addData("avg ", avg);
+            telemetry.addData("adf ", avgdiff);
+            telemetry.addData("mdf ", maxdiff);
             telemetry.update();
         }
     }
