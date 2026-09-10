@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.command;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.subsystem.GameSubsystem;
+import org.firstinspires.ftc.teamcode.subsystem.IntakeSubsystem;
 
-public class MoveIntake extends CommandBase {
-    private final GameSubsystem intake;
+public class IntakeMove extends CommandBase {
+    private final IntakeSubsystem intake;
     private final double power;
-    public MoveIntake(GameSubsystem intake, double power) {
+    public IntakeMove(IntakeSubsystem intake, double power) {
         this.intake = intake;
         this.power = power;
     }

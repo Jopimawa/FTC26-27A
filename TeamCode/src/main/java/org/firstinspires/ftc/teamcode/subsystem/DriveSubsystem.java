@@ -3,15 +3,17 @@ package org.firstinspires.ftc.teamcode.subsystem;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
-import com.bylazar.telemetry.PanelsTelemetry;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.helper.MotorInit;
 
 @Configurable
 public class DriveSubsystem extends SubsystemBase {
+
+    private static boolean setup = false;
+    private static Telemetry telemetry;
     Motor m_frontLeft;
     public static boolean frontLeftRev = false;
     Motor m_frontRight;
@@ -20,62 +22,45 @@ public class DriveSubsystem extends SubsystemBase {
     public static boolean backLeftRev = false;
     Motor m_backRight;
     public static boolean backRightRev = true;
-    public static double driveKp = 0.5;
-    public static double driveKi = 0;
-    public static double driveKd = 0.022;
-    public static double driveKs = 0.02;
-    public static double driveKv = 1.2;
-    private static boolean setup = false;
-    private static Telemetry telemetry;
+    public static double[] driveK = new double[] {0.5, 0, 0.022, 0.02, 1.2};
+    private boolean currVel;
     public DriveSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
 
         m_frontLeft = new Motor(hardwareMap,"frontLeft");
-        setupMotor(m_frontLeft,frontLeftRev);
 
         m_frontRight = new Motor(hardwareMap,"frontRight");
-        setupMotor(m_frontRight,frontRightRev);
+        MotorInit.setupMotor(m_frontRight,frontRightRev,true,true, driveK);
 
         m_backLeft = new Motor(hardwareMap,"backLeft");
-        setupMotor(m_backLeft,backLeftRev);
+        MotorInit.setupMotor(m_backLeft,backLeftRev,true,true, driveK);
 
         m_backRight = new Motor(hardwareMap,"backRight");
-        setupMotor(m_backRight,backRightRev);
+        MotorInit.setupMotor(m_backRight,backRightRev,true,true, driveK);
 
-        updateV(true);
         DriveSubsystem.telemetry = telemetry;
     }
-    public void setupMotor(Motor motor, boolean rev) {
-        motor.setInverted(rev);
-        motor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        updateK(motor);
+    public void setupMotor(Motor motor, boolean isRev, boolean isBrake, boolean isVelocityControl, double[] k) {
+        motor.setInverted(isRev);
+        Motor.ZeroPowerBehavior brake = (isBrake) ? Motor.ZeroPowerBehavior.BRAKE : Motor.ZeroPowerBehavior.FLOAT;
+        motor.setZeroPowerBehavior(brake);
+        MotorInit.setV(motor, isVelocityControl);
+        MotorInit.setK(motor, k);
     }
-    public void updateV(boolean vel) {
-        if (vel) {
-            m_frontLeft.setRunMode(Motor.RunMode.VelocityControl);
-            m_frontRight.setRunMode(Motor.RunMode.VelocityControl);
-            m_backLeft.setRunMode(Motor.RunMode.VelocityControl);
-            m_backRight.setRunMode(Motor.RunMode.VelocityControl);
-            telemetry.addData("drive type: ","encoder");
-        } else {
-            m_frontLeft.setRunMode(Motor.RunMode.RawPower);
-            m_frontRight.setRunMode(Motor.RunMode.RawPower);
-            m_backLeft.setRunMode(Motor.RunMode.RawPower);
-            m_backRight.setRunMode(Motor.RunMode.RawPower);
-            telemetry.addData("drive type: ","raw (last years)");
-        }
+    public void setV(boolean isVelocityControl) {
+        currVel = isVelocityControl;
+        MotorInit.setV(m_frontLeft, isVelocityControl);
+        MotorInit.setV(m_frontRight, isVelocityControl);
+        MotorInit.setV(m_backLeft, isVelocityControl);
+        MotorInit.setV(m_backRight, isVelocityControl);
     }
-    public void updateK(Motor motor) {
-        motor.setVeloCoefficients(driveKp, driveKi, driveKd);
-        motor.setFeedforwardCoefficients(driveKs, driveKv);
+
+    public void setK() {
+        MotorInit.setK(m_frontLeft, driveK);
+        MotorInit.setK(m_frontRight, driveK);
+        MotorInit.setK(m_backLeft, driveK);
+        MotorInit.setK(m_backRight, driveK);
     }
-    public void updateK() {
-        updateK(m_frontLeft);
-        updateK(m_frontRight);
-        updateK(m_backLeft);
-        updateK(m_backRight);
-        //67
-    }
-    public void drive(double x, double y, double rx) {
+    public void setDrive(double x, double y, double rx) {
         driveManual(x,y,rx);
         setup = true;
         telemetry.addData("x  ",x);
@@ -103,32 +88,10 @@ public class DriveSubsystem extends SubsystemBase {
            backRight  /= power + Math.abs(rx);
        }
 
-       driveRaw(frontLeft,frontRight,backLeft,backRight);
+       setDrive(frontLeft,frontRight,backLeft,backRight);
     }
 
-    public void driveLegacy(double x, double y, double rx) {
-        // Drive used in 2025-2026 season, clobbered by aaron jimenez but wasnt replaced the whole season
-        x =-x;
-        y =-y;
-
-        double fl = y + x - rx;
-        double fr = y - x + rx;
-        double bl = y - x - rx;
-        double br = y + x + rx;
-
-
-        // Normalize so no value exceeds 1
-        double max = Math.max(1.0, Math.max(Math.abs(fl),
-                Math.max(Math.abs(bl), Math.max(Math.abs(fr), Math.abs(br)))));
-
-        fl /= max;
-        bl /= max;
-        fr /= max;
-        br /= max;
-
-        driveRaw(fl,fr,bl,br);
-    }
-    public void driveRaw(double fl, double fr, double bl, double br) {
+    public void setDrive(double fl, double fr, double bl, double br) {
         m_frontLeft.set(fl);
         m_frontRight.set(fr);
         m_backLeft.set(bl);
@@ -139,7 +102,7 @@ public class DriveSubsystem extends SubsystemBase {
         telemetry.addData("br ",br);
 
     }
-    public void stop() {
+    public void stopDrive() {
         m_frontLeft.stopMotor();
         m_backLeft.stopMotor();
         m_frontRight.stopMotor();
@@ -149,6 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         if (setup) {
+            telemetry.addData("encoder usage: ", currVel);
             double flr = m_frontLeft.getRate();
             double frr = m_frontRight.getRate();
             double brr = m_backLeft.getRate();

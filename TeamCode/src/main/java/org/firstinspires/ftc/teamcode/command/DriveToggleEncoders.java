@@ -4,19 +4,17 @@ import com.seattlesolvers.solverslib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.subsystem.DriveSubsystem;
 
-import java.util.function.DoubleSupplier;
-
-public class ToggleMoveEncoder extends CommandBase {
+public class DriveToggleEncoders extends CommandBase {
     DriveSubsystem drive;
     boolean vel;
-    public ToggleMoveEncoder(DriveSubsystem drive, boolean vel) {
+    public DriveToggleEncoders(DriveSubsystem drive, boolean vel) {
         this.drive = drive;
         this.vel = vel;
     }
 
     @Override
     public void initialize() {
-        drive.updateV(vel);
+        drive.setV(vel);
     }
 
 }
