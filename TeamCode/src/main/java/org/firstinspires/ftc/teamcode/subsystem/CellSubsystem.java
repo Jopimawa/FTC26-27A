@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+// every moving part related to cell scoring -jr
 public class CellSubsystem extends SubsystemBase {
     private final Telemetry telemetry;
     public CellSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {

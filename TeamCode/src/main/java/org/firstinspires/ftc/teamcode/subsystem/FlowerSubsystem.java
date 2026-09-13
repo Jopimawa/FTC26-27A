@@ -9,6 +9,7 @@ import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+// Every moving part related to flower scoring -jr
 public class FlowerSubsystem extends SubsystemBase {
     private final Telemetry telemetry;
     public FlowerSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
