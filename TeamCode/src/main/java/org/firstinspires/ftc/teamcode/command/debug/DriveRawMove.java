@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.command;
+package org.firstinspires.ftc.teamcode.command.debug;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
 

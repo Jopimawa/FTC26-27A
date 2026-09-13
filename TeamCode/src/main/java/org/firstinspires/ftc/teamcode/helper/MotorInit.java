@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.helper;
 
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
-public static class MotorInit {
-    public static Motor setupMotor(Motor motor, boolean isRev, boolean isBrake, boolean isVelocityControl, double[] k) {
+public final class MotorInit {
+    public static void setupMotor(Motor motor, boolean isRev, boolean isBrake, boolean isVelocityControl, double[] k) {
         motor.setInverted(isRev);
-        Motor.ZeroPowerBehavior brake = (isBrake) ? Motor.ZeroPowerBehavior.BRAKE : Motor.ZeroPowerBehavior.FLOAT;
+
+        Motor.ZeroPowerBehavior brake = isBrake ? Motor.ZeroPowerBehavior.BRAKE : Motor.ZeroPowerBehavior.FLOAT;
         motor.setZeroPowerBehavior(brake);
-        Motor.RunMode runMode = (isVelocityControl) ? Motor.RunMode.VelocityControl : Motor.RunMode.RawPower;
+
+        Motor.RunMode runMode = isVelocityControl ? Motor.RunMode.VelocityControl : Motor.RunMode.RawPower;
         motor.setRunMode(runMode);
         if (isVelocityControl)
             MotorInit.setK(motor, k);
@@ -17,6 +19,8 @@ public static class MotorInit {
         motor.setRunMode(runMode);
     }
     public static void setK(Motor motor, double[] coeff) {
-
+        //The array coeff is in the order {P,I,D,Fs,Fv}
+        motor.setVeloCoefficients(coeff[0], coeff[1], coeff[2]);
+        motor.setFeedforwardCoefficients(coeff[3],coeff[4]);
     }
 }

@@ -12,63 +12,57 @@ import org.firstinspires.ftc.teamcode.helper.MotorInit;
 @Configurable
 public class DriveSubsystem extends SubsystemBase {
 
-    private static boolean setup = false;
     private static Telemetry telemetry;
-    Motor m_frontLeft;
-    public static boolean frontLeftRev = false;
-    Motor m_frontRight;
-    public static boolean frontRightRev = true;
-    Motor m_backLeft;
-    public static boolean backLeftRev = false;
-    Motor m_backRight;
-    public static boolean backRightRev = true;
-    public static double[] driveK = new double[] {0.5, 0, 0.022, 0.02, 1.2};
-    private boolean currVel;
+    private static Motor m_frontLeft;
+    private static Motor m_frontRight;
+    private static Motor m_backLeft;
+    private static Motor m_backRight;
+    public static boolean k_frontLeftInv = false;
+    public static boolean k_frontRightInv = true;
+    public static boolean k_backLeftInv = false;
+    public static boolean k_backRightInv = true;
+    public static double[] k_coeff = new double[] {0.5, 0, 0.022, 0.02, 1.2};
+    //private static boolean setup = false;
+    private boolean k_vel = true;
     public DriveSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
 
         m_frontLeft = new Motor(hardwareMap,"frontLeft");
+        MotorInit.setupMotor(m_frontLeft, k_frontLeftInv,true,true, k_coeff);
 
         m_frontRight = new Motor(hardwareMap,"frontRight");
-        MotorInit.setupMotor(m_frontRight,frontRightRev,true,true, driveK);
+        MotorInit.setupMotor(m_frontRight, k_frontRightInv,true,true, k_coeff);
 
         m_backLeft = new Motor(hardwareMap,"backLeft");
-        MotorInit.setupMotor(m_backLeft,backLeftRev,true,true, driveK);
+        MotorInit.setupMotor(m_backLeft, k_backLeftInv,true,true, k_coeff);
 
         m_backRight = new Motor(hardwareMap,"backRight");
-        MotorInit.setupMotor(m_backRight,backRightRev,true,true, driveK);
+        MotorInit.setupMotor(m_backRight, k_backRightInv,true,true, k_coeff);
 
         DriveSubsystem.telemetry = telemetry;
     }
-    public void setupMotor(Motor motor, boolean isRev, boolean isBrake, boolean isVelocityControl, double[] k) {
-        motor.setInverted(isRev);
-        Motor.ZeroPowerBehavior brake = (isBrake) ? Motor.ZeroPowerBehavior.BRAKE : Motor.ZeroPowerBehavior.FLOAT;
-        motor.setZeroPowerBehavior(brake);
-        MotorInit.setV(motor, isVelocityControl);
-        MotorInit.setK(motor, k);
-    }
-    public void setV(boolean isVelocityControl) {
-        currVel = isVelocityControl;
-        MotorInit.setV(m_frontLeft, isVelocityControl);
-        MotorInit.setV(m_frontRight, isVelocityControl);
-        MotorInit.setV(m_backLeft, isVelocityControl);
-        MotorInit.setV(m_backRight, isVelocityControl);
-    }
 
-    public void setK() {
-        MotorInit.setK(m_frontLeft, driveK);
-        MotorInit.setK(m_frontRight, driveK);
-        MotorInit.setK(m_backLeft, driveK);
-        MotorInit.setK(m_backRight, driveK);
-    }
     public void setDrive(double x, double y, double rx) {
         driveManual(x,y,rx);
-        setup = true;
+
         telemetry.addData("x  ",x);
         telemetry.addData("y  ",y);
         telemetry.addData("rx ",rx);
+        //setup = true;
+    }
+
+    public void setDrive(double fl, double fr, double bl, double br) {
+        m_frontLeft.set(fl);
+        m_frontRight.set(fr);
+        m_backLeft.set(bl);
+        m_backRight.set(br);
+        telemetry.addData("fl ",fl);
+        telemetry.addData("fr ",fr);
+        telemetry.addData("bl ",bl);
+        telemetry.addData("br ",br);
     }
 
     public void driveManual(double x, double y, double rx) {
+        //copied from a brogan m pratt video, you can try to understand it i wont comment it -jr
        double theta = Math.atan2(y,x);
        double power = Math.hypot(y,x);
 
@@ -91,28 +85,36 @@ public class DriveSubsystem extends SubsystemBase {
        setDrive(frontLeft,frontRight,backLeft,backRight);
     }
 
-    public void setDrive(double fl, double fr, double bl, double br) {
-        m_frontLeft.set(fl);
-        m_frontRight.set(fr);
-        m_backLeft.set(bl);
-        m_backRight.set(br);
-        telemetry.addData("fl ",fl);
-        telemetry.addData("fr ",fr);
-        telemetry.addData("bl ",bl);
-        telemetry.addData("br ",br);
-
-    }
     public void stopDrive() {
         m_frontLeft.stopMotor();
         m_backLeft.stopMotor();
         m_frontRight.stopMotor();
         m_backRight.stopMotor();
+        telemetry.addData("x  ",0);
+        telemetry.addData("y  ",0);
+        telemetry.addData("rx ",0);
+    }
+
+    public void setV(boolean isVelocityControl) {
+        k_vel = isVelocityControl;
+        MotorInit.setV(m_frontLeft, isVelocityControl);
+        MotorInit.setV(m_frontRight, isVelocityControl);
+        MotorInit.setV(m_backLeft, isVelocityControl);
+        MotorInit.setV(m_backRight, isVelocityControl);
+    }
+
+    public void setK() {
+        MotorInit.setK(m_frontRight, k_coeff);
+        MotorInit.setK(m_frontLeft, k_coeff);
+        MotorInit.setK(m_backRight, k_coeff);
+        MotorInit.setK(m_backLeft, k_coeff);
     }
 
     @Override
     public void periodic() {
+        /* was used to compare the accuracy of encoder/non encoder drive
         if (setup) {
-            telemetry.addData("encoder usage: ", currVel);
+
             double flr = m_frontLeft.getRate();
             double frr = m_frontRight.getRate();
             double brr = m_backLeft.getRate();
@@ -129,8 +131,10 @@ public class DriveSubsystem extends SubsystemBase {
             telemetry.addData("avg ", avg);
             telemetry.addData("adf ", avgdiff);
             telemetry.addData("mdf ", maxdiff);
-            telemetry.update();
         }
+        */
+        telemetry.addData("encoder usage: ", k_vel);
+        telemetry.update();
     }
 
 }

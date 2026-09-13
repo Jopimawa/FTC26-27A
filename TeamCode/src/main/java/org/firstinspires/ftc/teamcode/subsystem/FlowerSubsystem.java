@@ -3,28 +3,24 @@ package org.firstinspires.ftc.teamcode.subsystem;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
+import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class IntakeSubsystem extends SubsystemBase {
-
+public class FlowerSubsystem extends SubsystemBase {
     private final Telemetry telemetry;
-    private final Motor m_intake;
-
-    public IntakeSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        m_intake = new Motor(hardwareMap, "intake");
+    public FlowerSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
     }
-    public void setIntake(double power) {
-        m_intake.set(power);
+    public void set(double power) {
     }
-    public void stopIntake() {
-        m_intake.stopMotor();
+    public void stop() {
     }
 
     @Override
     public void periodic() {
-        telemetry.update();
+       telemetry.update();
     }
 }
