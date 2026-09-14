@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystem;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
@@ -18,7 +19,7 @@ public class DriveSubsystem extends SubsystemBase {
     private static Motor m_backLeft;
     private static Motor m_backRight;
     public static boolean k_frontLeftInv = false;
-    public static boolean k_frontRightInv = true;
+    public static boolean k_frontRightInv = false;
     public static boolean k_backLeftInv = false;
     public static boolean k_backRightInv = true;
     public static double[] k_coeff = new double[] {0.5, 0, 0.022, 0.02, 1.2};
