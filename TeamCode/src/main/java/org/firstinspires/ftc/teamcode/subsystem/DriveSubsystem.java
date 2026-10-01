@@ -26,16 +26,16 @@ public class DriveSubsystem extends SubsystemBase {
     //private static boolean setup = false;
     private boolean k_vel = true;
     public DriveSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
-        init();
+        init(hardwareMap);
         DriveSubsystem.telemetry = telemetry;
         telemetryExists = true;
     }
 
     public DriveSubsystem(HardwareMap hardwareMap) {
-        init();
+        init(hardwareMap);
         telemetryExists = false;
     }
-    public void init() {
+    public void init(HardwareMap hardwareMap) {
         m_frontLeft = new Motor(hardwareMap,"frontLeft");
         MotorInit.setupMotor(m_frontLeft, k_frontLeftInv,true,true, k_coeff);
 
