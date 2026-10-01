@@ -12,12 +12,19 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 // Every moving part related to flower scoring -jr
 public class FlowerSubsystem extends SubsystemBase {
     private final Telemetry telemetry;
+    //private final ServoEx s_flowerIntake;
     public FlowerSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
+        //s_flowerIntake;
     }
-    public void set(double power) {
+    public void setIntake(double position) {
+        // TODO
     }
-    public void stop() {
+    public void stopIntake() {
+        // TODO
+    }
+    public void getIntake() {
+        // TODO
     }
 
     @Override

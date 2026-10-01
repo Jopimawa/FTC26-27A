@@ -20,8 +20,8 @@ public class DriveSubsystem extends SubsystemBase {
     private static Motor m_backRight;
     public static boolean k_frontLeftInv = false;
     public static boolean k_frontRightInv = false;
-    public static boolean k_backLeftInv = false;
-    public static boolean k_backRightInv = true;
+    public static boolean k_backLeftInv = true;
+    public static boolean k_backRightInv = false;
     public static double[] k_coeff = new double[] {0.5, 0, 0.022, 0.02, 1.2};
     //private static boolean setup = false;
     private boolean k_vel = true;

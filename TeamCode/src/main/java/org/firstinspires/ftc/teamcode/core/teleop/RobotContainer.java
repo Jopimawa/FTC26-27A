@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.command.CellThrow;
 import org.firstinspires.ftc.teamcode.command.IntakeMove;
 import org.firstinspires.ftc.teamcode.command.DriveMove;
 import org.firstinspires.ftc.teamcode.command.debug.DriveRawMove;
@@ -32,11 +33,17 @@ public class RobotContainer {
         gamepad = new GamepadEx[]{new GamepadEx(gamepad1), new GamepadEx(gamepad2)};
         configureBindings();
     }
-    public void configureBindings() {
+    public void configureBindings() {3
         drive.setDefaultCommand(new DriveMove(drive, gamepad[0]::getLeftX, gamepad[0]::getLeftY, gamepad[0]::getRightX));
 
         gamepad[0].getGamepadButton(GamepadKeys.Button.A)
-                  .whenHeld(new IntakeMove(intake,1));
+                  .whenHeld(new IntakeMove(intake,-1));
+        gamepad[0].getGamepadButton(GamepadKeys.Button.B)
+                .whenHeld(new IntakeMove(intake,1));
+        gamepad[0].getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                 .whenHeld(new CellThrow(cell, 0.1));
+        gamepad[0].getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenHeld(new CellThrow(cell, 1));
 
         // debug bindings
         double debugDrivePower = 0.5;
