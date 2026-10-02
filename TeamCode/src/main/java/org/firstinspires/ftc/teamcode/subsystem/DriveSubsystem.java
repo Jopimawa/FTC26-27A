@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.helper.MotorInit;
 public class DriveSubsystem extends SubsystemBase {
 
     private static Telemetry telemetry;
+    private static boolean telemetryExists;
     private static Motor m_frontLeft;
     private static Motor m_frontRight;
     private static Motor m_backLeft;
@@ -26,7 +27,16 @@ public class DriveSubsystem extends SubsystemBase {
     //private static boolean setup = false;
     private boolean k_vel = true;
     public DriveSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+        init(hardwareMap);
+        DriveSubsystem.telemetry = telemetry;
+        telemetryExists = true;
+    }
 
+    public DriveSubsystem(HardwareMap hardwareMap) {
+        init(hardwareMap);
+        telemetryExists = false;
+    }
+    public void init(HardwareMap hardwareMap) {
         m_frontLeft = new Motor(hardwareMap,"frontLeft");
         MotorInit.setupMotor(m_frontLeft, k_frontLeftInv,true,true, k_coeff);
 
@@ -38,17 +48,15 @@ public class DriveSubsystem extends SubsystemBase {
 
         m_backRight = new Motor(hardwareMap,"backRight");
         MotorInit.setupMotor(m_backRight, k_backRightInv,true,true, k_coeff);
-
-        DriveSubsystem.telemetry = telemetry;
     }
-
     public void setDrive(double x, double y, double rx) {
         driveManual(x,y,rx);
-
-        telemetry.addData("x  ",x);
-        telemetry.addData("y  ",y);
-        telemetry.addData("rx ",rx);
-        //setup = true;
+        if (telemetryExists) {
+            telemetry.addData("x  ", x);
+            telemetry.addData("y  ", y);
+            telemetry.addData("rx ", rx);
+            //setup = true;
+        }
     }
 
     public void setDrive(double fl, double fr, double bl, double br) {
@@ -56,10 +64,12 @@ public class DriveSubsystem extends SubsystemBase {
         m_frontRight.set(fr);
         m_backLeft.set(bl);
         m_backRight.set(br);
-        telemetry.addData("fl ",fl);
-        telemetry.addData("fr ",fr);
-        telemetry.addData("bl ",bl);
-        telemetry.addData("br ",br);
+        if (telemetryExists) {
+            telemetry.addData("fl ", fl);
+            telemetry.addData("fr ", fr);
+            telemetry.addData("bl ", bl);
+            telemetry.addData("br ", br);
+        }
     }
 
     public void driveManual(double x, double y, double rx) {
@@ -91,9 +101,11 @@ public class DriveSubsystem extends SubsystemBase {
         m_backLeft.stopMotor();
         m_frontRight.stopMotor();
         m_backRight.stopMotor();
-        telemetry.addData("x  ",0);
-        telemetry.addData("y  ",0);
-        telemetry.addData("rx ",0);
+        if (telemetryExists) {
+            telemetry.addData("x  ",0);
+            telemetry.addData("y  ",0);
+            telemetry.addData("rx ",0);
+        }
     }
 
     public void setV(boolean isVelocityControl) {
@@ -134,8 +146,10 @@ public class DriveSubsystem extends SubsystemBase {
             telemetry.addData("mdf ", maxdiff);
         }
         */
-        telemetry.addData("encoder usage: ", k_vel);
-        telemetry.update();
+        if (telemetryExists) {
+            telemetry.addData("encoder usage: ", k_vel);
+            telemetry.update();
+        }
     }
 
 }
