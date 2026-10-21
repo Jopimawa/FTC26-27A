@@ -15,7 +15,7 @@ public class IntakeMove extends CommandBase {
 
 
     @Override
-    public void execute() {
+    public void initialize() {
         intake.setIntake(-power);
     }
 

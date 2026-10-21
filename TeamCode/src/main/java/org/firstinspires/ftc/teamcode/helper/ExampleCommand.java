@@ -42,7 +42,6 @@ public class ExampleCommand extends CommandBase {
         only really useful for drive - jr
         */
         addRequirements(example);
-
     }
 
     @Override

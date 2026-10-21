@@ -30,7 +30,7 @@ public class AutoMoveTest extends CommandOpMode {
         telemetry.addLine("Test the move command: MoveLeft + MoveRight");
         telemetry.addLine("These routines have no pedropathing");
         telemetry.addLine("TESTING:");
-        telemetry.addLine("1. Connect to robot wifi RC8796 on laptop");
+        telemetry.addLine("1. Connect to robot wifi 8796-RC on laptop");
         telemetry.addLine("2. search up 192.168.49.1:8001 on browser");
         telemetry.addLine("3. Open the AutoMoveTest tab in the middle; this is where you test");
         telemetry.addLine("4. Press A to run the command");

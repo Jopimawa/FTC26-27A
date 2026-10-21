@@ -13,7 +13,7 @@ public class AutoMoveRight extends CommandOpMode {
     // IF YOU ARE TESTING, CHANGE THESE VARIABLES, DO NOT TOUCH ANYTHING ELSE
 
     public double speed = 1;
-    public double time = 100;
+    public double time = 500;
 
     // IF YOU ARE TESTING, CHANGE THESE VARIABLES, DO NOT TOUCH ANYTHING ELSE
     // IF YOU ARE TESTING, CHANGE THESE VARIABLES, DO NOT TOUCH ANYTHING ELSE

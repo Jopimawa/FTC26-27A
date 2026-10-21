@@ -48,9 +48,11 @@ public class ExampleSubsystem extends SubsystemBase {
     public void setFoo(double power) {
         m_foo.set(power);
     }
+
     public void stopFoo() {
         m_foo.stopMotor();
-    }
+   }
+
     public void setBar(double position) {
         s_bar.set(position);
     }

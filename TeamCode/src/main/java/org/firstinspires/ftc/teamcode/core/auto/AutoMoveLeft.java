@@ -14,10 +14,20 @@ public class AutoMoveLeft extends CommandOpMode {
     // IF YOU ARE TESTING, CHANGE THESE VARIABLES, DO NOT TOUCH ANYTHING ELSE
 
     public double speed = -1;
-    public double time = 100;
+    public double time = 500;
 
     // IF YOU ARE TESTING, CHANGE THESE VARIABLES, DO NOT TOUCH ANYTHING ELSE
     // IF YOU ARE TESTING, CHANGE THESE VARIABLES, DO NOT TOUCH ANYTHING ELSE
+    // ####### UPLOADING #######
+    // TO UPLOAD THIS, CONNECT ORANGE USB C TO THE CONTROL HUB
+    // wait until it says "REV Robotics Control Hub v1.0 at to top
+    // wait until the play button next to teamcode becomes a reload button
+    // press the build button to the right ot the 3 dots (hammer with play button)
+    // wait 20 seconds for it to build
+    // press reload
+    // wait for 2 minutes
+    // unplug
+    // call me if you need help
     // good job if you got this far lol
 
     private DriveSubsystem drive;
